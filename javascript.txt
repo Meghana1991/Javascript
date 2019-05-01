@@ -1,0 +1,76 @@
+1)Every browser has javascript engine running in the background which runs the javascript code.
+FireFox - spiderMonkey
+Chrome - v8
+Thats why the code can be written in the developer tools console area
+
+2)there are some web development servers available like Live Server which actually has some extra features like auto reload on changes etc.
+http://127.0.0.1:5500/index.html
+here the url indicates from where the pages are served from.
+
+3)The reasons for loading the <scripts> in the body tag is that -
+Reason 1 - If you load in the head tag, then the problem is that if the script takes lot of time to load then the content of the body tag will not be loaded and user might experience some delay or may be whitepage while the browser is busy parsing/executing the javascript code in scripts etc.
+
+Reason 2 - If you have scripts at the head where the javascript code in that script will have to talk to the elements in the HTML. In that case the elements should be loaded only then the script has to be applied kinda.
+
+However, some 3rd party script should be run in the head tag itself 
+
+4)Run the index.html in the browser and see "Hello world" and the same code in the terminal with node index.js then also you see "Hello world" because the browser v8 engine is integrated with node.
+
+5)In javascript there is no separate floating point and integer or number. All the numbers are numbers like 1.02 and 1.99999 or 133232 or 1 is typeof number
+
+6) Console guys
+var some = undefined
+typeof(some)
+"undefined"
+
+var some = null
+typeof(some)
+"object"
+
+7)the values in the array need not be same type. var arr = ["hi", "sam", 3 , "phew"]
+
+var p = { name : "anna", age : 26}
+typeof(p)
+"object"
+
+var someArr = [1,2,"some","pl"]
+typeof(someArr)
+"object"
+
+8)Procedure oriented programming will have many functions and many variables all together which calls each other and dependent of each other with messy approach like spagheti.
+Object oriented approach will group the respective functions and variables in a Object. If you have car object then only those data related to car will be residing in it.
+This approach is Object Oriented programming.This is called ENCAPSULATION.
+
+9)You have a DVD player with full complexity inside and outside you have fewer buttons to interact with Likewise we can make our object have all complex logic hidden exposing only simple functions and variables for the outsidee world. Make the complex functions and variables private within them to abstract it. By doing this one can give a simple interface
+
+10)Inheritance as you know helps us to remove redundant code. You need not write code in multiple places instead choose Inheritance
+
+11) In ES6, a new feature is like -
+
+var obj = {
+    radius : radius,
+    border  : 1
+}
+
+or
+
+var obj = {
+    radius,
+    border  : 1
+}
+
+Here key and value are both same, so you can directly use radius
+
+12)The keyword new is very special. Whenever used it creates a new empty objec copy and then add properties and functions to it and then returns it. Without this if you invoke the object, then the this will point to global window object. By using new, it makes it point to the guy who called it.
+
+Example: var some = new Circle(1)
+Example: var phew = Circle(1)
+So the new plays a very important role in this ;)
+
+13)Every object has a constructor property in it.
+A string can be created like "some" or " " or new String("some")
+A number can be created like 1, 2 or new Number(4)
+A function can be created like function some(){} or like 
+new Function('args',`this.draw = function(){console.log("hi")`)
+
+14)Every function is a object. 
