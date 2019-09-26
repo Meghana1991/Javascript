@@ -2,6 +2,14 @@
 FireFox - spiderMonkey
 Chrome - v8
 Thats why the code can be written in the developer tools console area
+JavaScript can execute not only in the browser, but also on the server, or actually on any device that has a special program called the JavaScript engine.
+The browser has an embedded engine sometimes called a “JavaScript virtual machine”.
+
+Every browser will have javascript engine which will do the following-
+
+The engine (embedded if it’s a browser) reads (“parses”) the script.
+Then it converts (“compiles”) the script to the machine language.
+And then the machine code runs, pretty fast.
 
 2)there are some web development servers available like Live Server which actually has some extra features like auto reload on changes etc.
 http://127.0.0.1:5500/index.html
@@ -74,3 +82,222 @@ A function can be created like function some(){} or like
 new Function('args',`this.draw = function(){console.log("hi")`)
 
 14)Every function is a object. 
+
+15)ECMAScript 5 (ES5) appeared. It added new features to the language and modified some of the existing ones. To keep the old code working, most modifications are off by default. You need to explicitly enable them with a special directive: "use strict".
+
+The directive looks like a string: "use strict" or 'use strict'. When it is located at the top of a script, the whole script works the “modern” way. The "use strict" directive switches the engine to the “modern” mode, changing the behavior of some built-in features. We’ll see the details later in the tutorial.Looking ahead, let’s just note that "use strict" can be put at the start of most kinds of functions instead of the whole script. Doing that enables strict mode in that function only. But usually, people use it for the whole script.
+
+=>    // note: no "use strict" in this example
+
+    num = 5; // the variable "num" is created if it didn't exist
+
+    console.log(num); // 5
+
+=>   "use strict";
+
+num = 5; // error: num is not defined
+
+16)let let = 5; // can't name a variable "let", error!
+let var = 5; // can't name a variable "var", error!
+let return = 5; // also can't name it "return", error!
+
+17)In JavaScript, there are 3 types of quotes.
+
+Double quotes: "Hello".
+Single quotes: 'Hello'.
+Backticks: `Hello ${name}`.
+
+18)The operator ++/-- before or after the variable matters. ++counter to counter++
+
+Let’s clarify. As we know, all operators return a value. Increment/decrement is no exception. The prefix form returns the new value while the postfix form returns the old value (prior to increment/decrement).
+
+let counter = 1;
+let a = ++counter; // (*)
+
+console.log(a); // 2
+
+let counter = 1;
+let a = counter++; // (*) changed ++counter to counter++
+
+console.log(a); // 1
+
+If the result of increment/decrement is not used, there is no difference in which form to use:
+let counter = 0;
+counter++;
+++counter;
+console.log( counter ); // 2, the lines above did the same
+
+If we’d like to increase a value and immediately use the result of the operator, we need the prefix form:
+let counter = 0;
+console.log( ++counter ); // 1
+
+If we’d like to increment a value but use its previous value, we need the postfix form:
+let counter = 0;
+console.log( counter++ ); // 0
+
+let counter = 1;
+alert( 2 * ++counter ); // 4
+
+let counter = 1;
+alert( 2 * counter++ ); // 2, because counter++ returns the "old" value
+
+19)String comparison
+To see whether a string is greater than another, JavaScript uses the so-called “dictionary” or “lexicographical” order.
+In other words, strings are compared letter-by-letter.
+
+http://javascript.info/comparison
+
+20)Interaction modals - alert, popup and confirm
+
+let ans = popup("how are you", '') //IE
+let ans = popup("how are you") //General
+alert("The response is ", ans)
+
+let yesOrNo = confirm("Are you insane?")
+alert(yesOrNo)
+//OK click returns true, Cancel returns false
+
+21)Normally, a loop exits when its condition becomes falsy.
+But we can force the exit at any time using the special break directive.
+
+The continue directive is a “lighter version” of break. It doesn’t stop the whole loop. Instead, it stops the current iteration and forces the loop to start a new one (if the condition allows).
+
+22)For Switch If there is no break then the execution continues with the next case without any checks.
+
+23)A function with an empty return or without it returns undefined
+function doNothing() { /* empty */ }
+
+alert( doNothing() === undefined ); // true
+
+function doNothing() {
+  return;
+}
+
+alert( doNothing() === undefined ); // true
+
+24)In JavaScript, a default parameter is evaluated every time the function is called without the respective parameter. In the example above, anotherFunction() is called every time showMessage() is called without the text parameter.
+ 
+function showMessage(from, text = anotherFunction()) {
+  // anotherFunction() only executed if no text given
+  // its result becomes the value of text
+}
+
+25)A function with an empty return or without it returns undefined
+If a function does not return a value, it is the same as if it returns undefined:
+
+You can check if like this also
+function showMovie(age) {
+  if ( !checkAge(age) ) {
+    return;
+  }
+
+  alert( "Showing you the movie" ); // (*)
+  // ...
+}
+
+26)Never add a newline between return and the value like 
+return
+ (some + long + expression + or + whatever * f(a) + f(b))
+
+That doesn’t work, because JavaScript assumes a semicolon after return. That’ll work the same as:
+return;
+ (some + long + expression + or + whatever * f(a) + f(b))
+ So, it effectively becomes an empty return.
+
+If we want the returned expression to wrap across multiple lines, we should start it at the same line as return. Or at least put the opening parentheses there as follows:
+return (
+  some + long + expression
+  + or +
+  whatever * f(a) + f(b)
+  )
+
+  function some() {
+	var a = 10;
+	function a(){
+		console.log("hi");
+	}
+	console.log(a())
+}
+
+27)When we use modern features of the language, some engines may fail to support such code. Just as said, not all features are implemented everywhere.Babel is a transpiler. It rewrites modern JavaScript code into the previous standard.
+
+Actually, there are two parts in Babel:
+
+First, the transpiler program, which rewrites the code. The developer runs it on their own computer. It rewrites the code into the older standard. And then the code is delivered to the website for users. Modern project build systems like webpack provide means to run transpiler automatically on every code change, so that very easy to integrate into development process.
+
+Second, the polyfill.
+
+New language features may include new built-in functions and syntax constructs. The transpiler rewrites the code, transforming syntax constructs into older ones. But as for new built-in functions, we need to implement them. JavaScript is a highly dynamic language, scripts may add/modify any functions, so that they behave according to the modern standard.
+
+A script that updates/adds new functions is called “polyfill”. It “fills in” the gap and adds missing implementations.
+
+Two interesting polyfills are:
+
+core js that supports a lot, allows to include only needed features.
+polyfill.io service that provides a script with polyfills, depending on the features and user’s browser.
+
+28)    @HostListener("window:onbeforeunload",["$event"])
+for event of closing the browser
+
+29)window or global object
+In a browser, global functions and variables declared with var (not let/const!) become the property of the global object:
+
+var gVar = 5;
+alert(window.gVar); // 5 (became a property of the global object)
+
+If we used let instead, such thing wouldn’t happen:
+
+let gLet = 5;
+alert(window.gLet); // undefined (doesn't become a property of the global object)
+
+If a value is so important that you’d like to make it available globally, write it directly as a property:
+
+// make current user information global, to let all scripts access it
+window.currentUser = {
+  name: "John"
+};
+
+// somewhere else in code
+alert(currentUser.name);  // John
+
+// or, if we have a local variable with the name "currentUser"
+// get it from window explicitly (safe!)
+alert(window.currentUser.name); // John
+
+30) "1" + 2 + 3 - 5 // 118
+
+arr = [1,2,3,4]
+arr.length = 0 //arr is deleted
+
+31) for(var i=0; i<=5; i++){
+  setTimeout(() => {
+    console.log(i)
+  })
+}
+// 5 5 5 5 5
+
+32) for(let i=0; i<=5; i++){
+  setTimeout(() => {
+    console.log(i)
+  })
+}
+
+33)The DOMContentLoaded event fires when the initial HTML document has been completely loaded and parsed, without waiting for stylesheets, images, and subframes to finish loading.
+vs onload or domload
+
+34)rem px and % and calc()
+
+35) Prototypes - check example for details
+Every JavaScript object has an internal property called [[Prototype]]. If you look up a property via obj.propName or obj['propName'] and the object does not have such a property - which can be checked via obj.hasOwnProperty('propName') - the runtime looks up the property in the object referenced by [[Prototype]] instead. If the prototype-object also doesn't have such a property, its prototype is checked in turn, thus walking the original object's prototype-chain until a match is found or its end is reached.
+
+Some JavaScript implementations allow direct access to the [[Prototype]] property, eg via a non-standard property named __proto__. In general, it's only possible to set an object's prototype during object creation: If you create a new object via new Func(), the object's [[Prototype]] property will be set to the object referenced by Func.prototype.
+  
+The ideal way to create a prototype is by calling new. But there are ways which are not good or not recommended like __proto__
+
+36)Difference between __proto__ and prototype - 
+__proto__ is the actual object that is used in the lookup chain to resolve methods, etc. prototype is the object that is used to build __proto__ when you create an object with new:
+( new Foo ).__proto__ === Foo.prototype;
+( new Foo ).prototype === undefined;
+
+So prototype is not available on the instances themselves (or other objects), but only on the constructor functions.
+prototype is only available on functions since they are derived from Function, Function, and Object but in anything else it is not. However, __proto__ is available everywhere.
