@@ -301,3 +301,48 @@ __proto__ is the actual object that is used in the lookup chain to resolve metho
 
 So prototype is not available on the instances themselves (or other objects), but only on the constructor functions.
 prototype is only available on functions since they are derived from Function, Function, and Object but in anything else it is not. However, __proto__ is available everywhere.
+15)Here, /path/to/script.js is an absolute path to the script from the site root. One can also provide a relative path from the current page. For instance, src="script.js" would mean a file "script.js" in the current folder.
+
+16)A single <script> tag can’t have both the src attribute and code inside.
+<script src="file.js">
+  alert(1); // the content is ignored, because src is set
+</script>
+
+17)Nested comments are not supported! - /**/
+
+18)ECMAScript 5 (ES5) appeared. It added new features to the language and modified some of the existing ones. To keep the old code working, most such modifications are off by default. You need to explicitly enable them with a special directive: "use strict".
+let’s note that "use strict" can be put at the beginning of the function body instead of the whole script. Doing that enables strict mode in that function only. But usually, people use it for the whole script.
+
+19)ECMAScript 5 (ES5)  added new features to the language and modified some of the existing ones. To keep the old code working, most such modifications are off by default
+The "use strict" directive switches the engine to the “modern” mode, changing the behavior of some built-in features. 
+
+20)Variables named apple and AppLE are two different variables.
+Non-Latin letters are allowed, but not recommended
+
+21)Any math which combines number with any alphabet results Non A Number NaN
+alert( "not a number" / 2 ); // NaN, such division is erroneous
+
+22)Backticks are “extended functionality” quotes. They allow us to embed variables and expressions into a string by wrapping them in alert( `Hello, ${name}!` ); // Hello, John!
+
+23)The result of typeof null is "object". That’s wrong. It is an officially recognized error in typeof, kept for compatibility. Of course, null is not an object. It is a special value with a separate type of its own. So, again, this is an error in the language.
+
+24)Numeric conversion happens in mathematical functions and expressions automatically.
+alert( "6" / "2" ); // 3
+
+25)Almost all mathematical operations convert values to numbers. A notable exception is addition +. If one of the added values is a string, the other one is also converted to a string.
+
+26)The unary plus or, in other words, the plus operator + applied to a single value, doesn’t do anything to numbers. But if the operand is not a number, the unary plus converts it into a number.
++2 //2
++"2" //2
++"some" //NaN
++null //0
+
+27)Exponentiation **
+The exponentiation operator ** is a recent addition to the language.
+For a natural number b, the result of a ** b is a multiplied by itself b times.
+alert( 2 ** 4 ); // 16 (2 * 2 * 2 * 2)
+alert( 2 ** 3 ); // 8  (2 * 2 * 2)
+
+28)A double NOT !! is sometimes used for converting a value to boolean type:
+console.log( !!"non-empty string" ); // true
+console.log( !!null ); // false
