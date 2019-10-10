@@ -1,0 +1,40 @@
+<html>
+
+<head>
+    <style>
+        p {
+            line-height: 0;
+        }
+
+        div {
+            display: inline-block;
+            padding: 5px;
+
+            background: #fff;
+            border: 1px solid #aaa;
+            cursor: pointer;
+        }
+
+        div:hover {
+            border: 1px solid #faa;
+            background: #fdd;
+        }
+    </style>
+</head>
+
+<body>
+    <div>1
+        <div>2
+            <div>3
+                <div>4
+                    <div>5</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button id="clear">clear output</button>
+    <section id="log"></section>
+
+    <script src="bubblingCapturing.js"></script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!-- 
+    For our own, completely new events types like "hello" we should use new CustomEvent. Technically CustomEvent is the same as Event, with one exception.
+    In the second argument (object) we can add an additional property detail for any custom information that we want to pass with the event.
+    After an event object is created, we should “run” it on an element using the call elem.dispatchEvent(event).
+ -->
+<!doctype html>
+
+<body>
+    <h1 id="elem">Hello for John!</h1>
+
+    <script>
+        // additional details come with the event to the handler
+        elem.addEventListener("hello", function (event) {
+            alert(event.detail.name);
+        });
+
+        /**
+         * Dispatch
+         * After an event object is created, we should “run” it on an element using the call elem.dispatchEvent(event).
+         * Call the object with that event now
+         * Example: elem.click() kind of
+         */
+        elem.dispatchEvent(new CustomEvent("hello", {
+            detail: { name: "John" }
+        }));
+
+    </script>
+</body>

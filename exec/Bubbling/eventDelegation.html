@@ -1,0 +1,24 @@
+<!doctype html>
+
+<body>
+    <style>
+        body * {
+            margin: 10px;
+            border: 1px solid blue;
+        }
+    </style>
+
+    <form onclick="console.log('this',this,'target', event.target)">FORM
+        <div>DIV
+            <p>P
+                <span>span</span>
+            </p>
+        </div>
+
+        <!-- Click on the Span
+            then the target element is span but the this will point to each phase of the bubbling element.   
+            Basically clicked element is the event.target
+            The propogated bubble is the "this" 
+        -->
+    </form>
+</body>

@@ -346,3 +346,437 @@ alert( 2 ** 3 ); // 8  (2 * 2 * 2)
 28)A double NOT !! is sometimes used for converting a value to boolean type:
 console.log( !!"non-empty string" ); // true
 console.log( !!null ); // false
+
+29)In JavaScript, there are three types of object fields (properties and methods):
+
+Public: accessible from anywhere. They comprise the external interface. Till now we were only using public properties and methods.
+Private: accessible only from inside the class. These are for the internal interface.
+“protected” fields: accessible only from inside the class and those extending it (like private, but plus access from inheriting classes). They are also useful for the internal interface. They are in a sense more widespread than private ones, because we usually want inheriting classes to gain access to them.
+Protected fields are not implemented in JavaScript on the language level, but in practice they are very convenient, so they are emulated.
+
+30)Protected properties are usually prefixed with an underscore _.
+That is not enforced on the language level, but there’s a well-known convention between programmers that such properties and methods should not be accessed from the outside.
+
+31)Built-in objects have their own static methods, for instance Object.keys, Array.isArray etc.
+
+As we already know, native classes extend each other. For instance, Array extends Object.
+
+Normally, when one class extends another, both static and non-static methods are inherited.
+
+32)Object.keys and Array.isArray are all static methods.
+
+33)In JavaScript we can only inherit from a single object. There can be only one [[Prototype]] for an object. And a class may extend only one other class.
+
+34)Usually we inherit only one class in the javascript at a time.Inorder to make it simple and yet useful we can use mixins. We can mix any number of classes using this.By copying the prototype of the classes we want to use in our class, we can achieve this. Check classAdvanced for more details
+
+35)The try..catch construct has two main blocks: try, and then catch:
+
+First, the code in try {...} is executed.
+If there were no errors, then catch(err) is ignored: the execution reaches the end of try and goes on skipping catch.
+If an error occurs, then try execution is stopped, and the control flows to the beginning of catch(err). The err variable (can use any name for it) contains an error object with details about what’s happened.
+
+36)Let’s imagine we’ve got a fatal error outside of try..catch, and the script died. Like a programming error or something else terrible.
+window.onerror = function(message, url, line, col, error) {
+  // ...
+};
+<script>
+  window.onerror = function(message, url, line, col, error) {
+    alert(`${message}\n At ${line}:${col} of ${url}`);
+  };
+
+  function readData() {
+    badFunc(); // Whoops, something went wrong!
+  }
+
+  readData();
+</script>
+
+37)When we develop something, we often need our own error classes to reflect specific things that may go wrong in our tasks. For errors in network operations we may need HttpError, for database operations DbError, for searching operations NotFoundError and so on.
+
+Our errors should support basic error properties like message, name and, preferably, stack. But they also may have other properties of their own, e.g. HttpError objects may have statusCode property with a value like 404 or 403 or 500.
+
+JavaScript allows to use throw with any argument, so technically our custom error classes don’t need to inherit from Error. But if we inherit, then it becomes possible to use obj instanceof Error to identify error objects. So it’s better to inherit from it.
+
+As the application grows, our own errors naturally form a hierarchy, for instance HttpTimeoutError may inherit from HttpError, and so on.
+
+function readUser(json) {
+  let user = JSON.parse(json);
+
+  if (!user.age) {
+    throw new ValidationError("No field: age");
+  }
+  if (!user.name) {
+    throw new ValidationError("No field: name");
+  }
+
+  return user;
+}
+
+Custom Error should be extended from the Main Error Object like
+
+class ValidationError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "ValidationError";
+  }
+}
+
+class PropertyRequiredError extends ValidationError {
+  constructor(property) {
+    super("No property: " + property);
+    this.name = "PropertyRequiredError";
+    this.property = property;
+  }
+}
+
+// Usage
+function readUser(json) {
+  let user = JSON.parse(json);
+
+  if (!user.age) {
+    throw new PropertyRequiredError("age");
+  }
+  if (!user.name) {
+    throw new PropertyRequiredError("name");
+  }
+
+  return user;
+}
+
+38)Callbacks are multiple nested
+But for multiple asynchronous actions that follow one after another we’ll have code like this:
+loadScript('1.js', function(error, script) {
+
+  if (error) {
+    handleError(error);
+  } else {
+    // ...
+    loadScript('2.js', function(error, script) {
+      if (error) {
+        handleError(error);
+      } else {
+        // ...
+        loadScript('3.js', function(error, script) {
+          if (error) {
+            handleError(error);
+          } else {
+            // ...continue after all scripts are loaded (*)
+          }
+        });
+
+      }
+    })
+  }
+});
+
+If anything breaks in between then all the code goes in vain so to overcome
+
+loadScript('1.js', step1);
+
+function step1(error, script) {
+  if (error) {
+    handleError(error);
+  } else {
+    // ...
+    loadScript('2.js', step2);
+  }
+}
+
+function step2(error, script) {
+  if (error) {
+    handleError(error);
+  } else {
+    // ...
+    loadScript('3.js', step3);
+  }
+}
+
+function step3(error, script) {
+  if (error) {
+    handleError(error);
+  } else {
+    // ...continue after all scripts are loaded (*)
+  }
+};
+
+REVISIT - Promises, async/await , Generators, advanced iteration
+
+39)As our application grows bigger, we want to split it into multiple files, so called “modules”. A module usually contains a class or a library of functions.
+
+For a long time, JavaScript existed without a language-level module syntax. That wasn’t a problem, because initially scripts were small and simple, so there was no need.
+
+But eventually scripts became more and more complex, so the community invented a variety of ways to organize code into modules, special libraries to load modules on demand.
+
+For instance:
+
+AMD – one of the most ancient module systems, initially implemented by the library require.js.
+CommonJS – the module system created for Node.js server.
+UMD – one more module system, suggested as a universal one, compatible with AMD and CommonJS.
+
+40)What is a module?
+A module is just a file. One script is one module.
+
+Modules can load each other and use special directives export and import to interchange functionality, call functions of one module from another one:
+
+export keyword labels variables and functions that should be accessible from outside the current module.
+import allows to import functionality from other modules.
+
+What’s different in modules, compared to “regular” scripts?
+There are core features, valid both for browser and server-side JavaScript.
+check moduleBasic.js
+
+41)Module Level Scope - The variables and function of one module doesn't get collided to another module? Know this
+
+42)A module when imported twice doesn't actually get imported twice but it is evaluated only once and then passed to further imports. Important part is All importers get exactly the one and only copy. // Both 1.js and 2.js imported the same object// Changes made in 1.js are visible in 2.js
+So, let’s reiterate – the module is executed only once. Exports are generated, and then they are shared between importers, so if something changes the admin object, other modules will see that.
+
+Consider the below scenario
+
+For instance, admin.js module may provide certain functionality, but expect the credentials to come into the admin object from outside:
+
+// 📁 admin.js
+export let admin = { };
+
+export function sayHi() {
+  alert(`Ready to serve, ${admin.name}!`);
+}
+
+In init.js, the first script of our app, we set admin.name. Then everyone will see it, including calls made from inside admin.js itself:
+
+// 📁 init.js
+import {admin} from './admin.js';
+admin.name = "Pete";
+
+Another module can also see admin.name:
+// 📁 other.js
+import {admin, sayHi} from './admin.js';
+alert(admin.name); // Pete
+sayHi(); // Ready to serve, Pete!
+
+43)Async in the scripts - For non-module scripts, async attribute only works on external scripts. Async scripts run immediately when ready, independently of other scripts or the HTML document.For module scripts, it works on any scripts.
+That’s good for functionality that doesn’t depend on anything, like counters, ads, document-level event listeners.
+
+<script async type="module">
+  import {counter} from './analytics.js';
+
+  counter.count();
+</script>
+
+44)Old browsers do not understand type="module". Scripts of the unknown type are just ignored. For them, it’s possible to provide a fallback using nomodule attribute:
+
+ <script type="module">
+  alert("Runs in modern browsers");
+</script>
+
+<script nomodule>
+  alert("Modern browsers know both type=module and nomodule, so skip this")
+  alert("Old browsers ignore script with unknown type=module, but execute this.");
+</script>
+
+45)Build Process - 
+Build tools do the following:
+
+Take a “main” module, the one intended to be put in <script type="module"> in HTML.
+Analyze its dependencies: imports and then imports of imports etc.
+Build a single file with all modules (or multiple files, that’s tunable), replacing native import calls with bundler functions, so that it works. “Special” module types like HTML/CSS modules are also supported.
+In the process, other transforms and optimizations may be applied:
+Unreachable code removed.
+Unused exports removed (“tree-shaking”).
+Development-specific statements like console and debugger removed.
+Modern, bleeding-edge JavaScript syntax may be transformed to older one with similar functionality using Babel.
+The resulting file is minified (spaces removed, variables replaced with shorter names, etc).
+In production, people often use bundlers such as Webpack to bundle modules together for performance and other reasons.
+
+Tree shaking is a term commonly used within a JavaScript context to describe the removal of dead code. It relies on the import and export statements in ES2015 to detect if code modules are exported and imported for use between JavaScript files
+
+Sometimes we would have written import * from file which would include all the functions in the file as we are using *. The webpack does treeshaking and removes all the unused references and makes build file smaller
+
+46)function sayHi(user) {
+  alert(`Hello, ${user}!`);
+}
+
+function sayBye(user) {
+  alert(`Bye, ${user}!`);
+}
+
+export {sayHi, sayBye}; // a list of exported variables
+
+Usually, we put a list of what to import in curly braces import {...}, like this:
+
+
+
+// 📁 main.js
+import {sayHi, sayBye} from './say.js';
+
+sayHi('John'); // Hello, John!
+sayBye('John'); // Bye, John!
+
+But if there’s a lot to import, we can import everything as an object using import * as <obj>, for instance:
+
+47)import {sayHi as hi, sayBye as bye} from './say.js';
+export {sayHi as hi, sayBye as bye};
+
+47) What is export default?
+In practice, there are mainly two kinds of modules.
+
+Module that contains a library, pack of functions, like say.js above.
+Module that declares a single entity, e.g. a module user.js exports only class User.
+Mostly, the second approach is preferred, so that every “thing” resides in its own module.
+
+If you are exporting a single entity(class) in a file as in second approach then use export default. Else explicitly use {some} to use.
+
+Put export default before the entity to export:
+
+
+              // 📁 user.js
+export default class User { // just add "default"
+  constructor(name) {
+    this.name = name;
+  }
+}
+There may be only one export default per file.
+
+…And then import it without curly braces:
+
+
+           // 📁 main.js
+import User from './user.js'; // not {User}, just User
+
+new User('John');
+
+48)Then dynamic import can be like this:
+<!doctype html>
+<script>
+  async function load() {
+    let say = await import('./say.js');
+    say.hi(); // Hello!
+    say.bye(); // Bye!
+    say.default(); // Module loaded (export default)!
+  }
+</script>
+<button onclick="load()">Click me</button>
+
+//say.js
+export function hi() {
+  alert(`Hello`);
+}
+
+export function bye() {
+  alert(`Bye`);
+}
+
+export default function() {
+  alert("Module loaded (export default)!");
+}
+
+49)Proxy and Reflect
+A Proxy object wraps another object and intercepts operations, like reading/writing properties and others, optionally handling them on its own, or transparently allowing the object to handle them.
+
+Basically proxy is like interceptor which will intercept and does actions Inorder to modify the target
+
+let proxy = new Proxy(target, handler)
+target – is an object to wrap, can be anything, including functions.
+handler – proxy configuration: an object with “traps”, methods that intercept operations. – e.g. get trap for reading a property of target, set trap for writing a property into target, and so on.
+
+To intercept reading, the handler should have a method get(target, property, receiver).
+
+let numbers = [0, 1, 2];
+
+numbers = new Proxy(numbers, {
+  get(target, prop) {
+    if (prop in target) {
+      return target[prop];
+    } else {
+      return 0; // default value
+    }
+  }
+});
+
+alert( numbers[1] ); // 1
+alert( numbers[123] ); // 0 (no such item)
+
+50)The set trap triggers when a property is written.
+set(target, property, value, receiver):
+
+let numbers = [];
+
+numbers = new Proxy(numbers, { // (*)
+  set(target, prop, val) { // to intercept property writing
+    if (typeof val == 'number') {
+      target[prop] = val;
+      return true;
+    } else {
+      return false;
+    }
+  }
+});
+
+numbers.push(1); // added successfully
+
+51)A call to eval(code) runs the string of code and returns the result of the last statement.
+Rarely used in modern JavaScript, as there’s usually no need.
+Can access outer local variables. That’s considered bad practice.
+Instead, to eval the code in the global scope, use window.eval(code).
+Or, if your code needs some data from the outer scope, use new Function and pass it as arguments.
+
+52)Currying - Currying is a transformation of functions that translates a function from callable as f(a, b, c) into callable as f(a)(b)(c).
+
+function curry(f) { // curry(f) does the currying transform
+  return function(a) {
+    return function(b) {
+      return f(a, b);
+    };
+  };
+}
+
+// usage
+function sum(a, b) {
+  return a + b;
+}
+
+let curriedSum = curry(sum);
+
+alert( curriedSum(1)(2) ); // 3
+
+53)Event bubbling and capturing are two ways of event propagation in the HTML DOM API, when an event occurs in an element inside another element, and both elements have registered a handle for that event. The event propagation mode determines in which order the elements receive the event.
+
+With bubbling, the event is first captured and handled by the innermost element and then propagated to outer elements.
+
+With capturing, the event is first captured by the outermost element and propagated to the inner elements.
+Check example for reference
+
+54)event.target
+A handler on a parent element can always get the details about where it actually happened.
+The most deeply nested element that caused the event is called a target element, accessible as event.target.
+
+Note the differences from this (=event.currentTarget):
+
+event.target – is the “target” element that initiated the event, it doesn’t change through the bubbling process.
+this – is the “current” element, the one that has a currently running handler on it.
+
+For instance, if we have a single handler form.onclick, then it can “catch” all clicks inside the form. No matter where the click happened, it bubbles up to <form> and runs the handler.
+
+In form.onclick handler:
+
+this (=event.currentTarget) is the <form> element, because the handler runs on it.
+event.target is the actual element inside the form that was clicked.
+
+55)What happens in bubbling is that the event propogates upwards always if clicked.If we have a table with 100 tds then attaching click for 100 is meaningless. To overcome that, bubbling comes to help. Click on any element and attach event only at the top of the table.
+
+Event bubbling provides the foundation for event delegation in browsers. Now you can bind an event handler to a single parent element, and that handler will get executed whenever the event occurs on any of its child nodes (and any of their children in turn). This is event delegation. Here's an example of it in practice:
+
+This is absolutely fantastic for web apps with event handlers bound to many elements, where new elements are dynamically created and/or removed in the DOM. With event delegation the number of event bindings can be drastically decreased by moving them to a common parent element, and code that dynamically creates new elements on the fly can be decoupled from the logic of binding their event handlers.
+
+DOM event delegation is a mechanism of responding to ui-events via a single common parent rather than each child, through the magic of event "bubbling" (aka event propagation).
+
+javascript.info Event Delegation is beautiful topic
+
+56)Preventing browser's default action like may be <a href ...> a navigation can be prevented by using event.preventDefault(). To prevent a default action – use either event.preventDefault() or return false. The second method works only for handlers assigned with on<event>.
+
+57)Creating Event Object 
+<button id="elem" onclick="alert('Click!');">Autoclick</button>
+
+<script>
+  let event = new Event("click");
+  elem.dispatchEvent(event);
+</script>

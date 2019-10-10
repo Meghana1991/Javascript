@@ -1,0 +1,38 @@
+<!doctype html>
+
+<body>
+    <style>
+        body * {
+            margin: 10px;
+            border: 1px solid blue;
+        }
+    </style>
+
+    <form onclick="alert('form')">FORM
+        <div onclick="alert('div')">DIV
+            <p>P
+                <span onclick="alert('span')">span</span>
+            </p>
+        </div>
+    </form>
+
+    <!-- 
+    Click on the Span -
+    span
+    div
+    form
+
+    Notice that p is skipped.
+ -->
+
+
+    <form onclick="alert('form')">FORM
+        <div>DIV
+            <p>P
+                <span>span</span>
+            </p>
+        </div>
+    </form>
+
+    <!-- Here the span is clicked and the event bubbles up and alerts form -->
+</body>
