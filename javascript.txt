@@ -780,3 +780,29 @@ javascript.info Event Delegation is beautiful topic
   let event = new Event("click");
   elem.dispatchEvent(event);
 </script>
+
+58)We can make the click event to work quite differently with some addons
+For instance, the button below only works on Alt+Shift+click:
+
+<button id="button">Alt+Shift+Click on me!</button>
+<script>
+  button.onclick = function(event) {
+    if (event.altKey && event.shiftKey) {
+      alert('Hooray!');
+    }
+  };
+</script>
+
+59)In JavaScript the DOM elements can be accessed like may be
+
+<div id="main">
+  <p>Hi</p>
+</div>
+
+let el = main
+
+Another Example
+<form id="form">
+  <input name="login">
+</form>
+alert(form.elements.login == form.login); // true, the same <input>
